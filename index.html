@@ -495,6 +495,95 @@ dialog::backdrop{background:rgba(31,42,68,.35);backdrop-filter:blur(4px)}
 .toast button{border:0;background:var(--yellow);color:var(--on-yellow);border-radius:9px;height:30px;padding:0 12px;font-weight:600}
 @media (max-width:720px){.toast{bottom:calc(90px + env(safe-area-inset-bottom,0px))}}
 @media (prefers-reduced-motion:no-preference){.prog i,.dbar .tr i,.dept .tr i,.gf .tr i{transition:width .5s ease}}
+
+/* =====================================================================
+   GIAO DIỆN TRONG SUỐT (glass) – chỉ thay lớp hiển thị, không đụng dữ liệu
+   ===================================================================== */
+:root{
+  --glass:rgba(255,255,255,.42); --glass-strong:rgba(255,255,255,.7); --glass-soft:rgba(255,255,255,.26);
+  --glass-edge:rgba(255,255,255,.75); --glass-blur:saturate(180%) blur(22px);
+  --soft:rgba(255,255,255,.5); --soft2:rgba(31,42,68,.07); --line:rgba(31,42,68,.09);
+  --heat0:rgba(31,42,68,.06);
+  --shadow:0 1px 0 rgba(255,255,255,.7) inset,0 10px 30px -14px rgba(60,40,10,.28);
+  --bg1:#FFD36E; --bg2:#FFAE8C; --bg3:#C4B2FF; --bg4:#9EE2D4; --bgbase:#F7EFE3;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --glass:rgba(34,30,44,.5); --glass-strong:rgba(30,27,40,.78); --glass-soft:rgba(255,255,255,.06);
+  --glass-edge:rgba(255,255,255,.12);
+  --soft:rgba(255,255,255,.06); --soft2:rgba(255,255,255,.08); --line:rgba(255,255,255,.09); --heat0:rgba(255,255,255,.06);
+  --shadow:0 1px 0 rgba(255,255,255,.06) inset,0 14px 34px -14px rgba(0,0,0,.7);
+  --bg1:#5A3E10; --bg2:#5A2638; --bg3:#2D2466; --bg4:#0F4A44; --bgbase:#0F0D14;
+}}
+:root[data-theme="dark"]{
+  --glass:rgba(34,30,44,.5); --glass-strong:rgba(30,27,40,.78); --glass-soft:rgba(255,255,255,.06);
+  --glass-edge:rgba(255,255,255,.12);
+  --soft:rgba(255,255,255,.06); --soft2:rgba(255,255,255,.08); --line:rgba(255,255,255,.09); --heat0:rgba(255,255,255,.06);
+  --shadow:0 1px 0 rgba(255,255,255,.06) inset,0 14px 34px -14px rgba(0,0,0,.7);
+  --bg1:#5A3E10; --bg2:#5A2638; --bg3:#2D2466; --bg4:#0F4A44; --bgbase:#0F0D14;
+}
+
+/* Nền: các mảng màu mềm để lớp kính có thứ để “nhìn xuyên” */
+body{background:var(--bgbase)}
+body::after{content:"";position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(45% 50% at 10% 15%,var(--bg1),transparent 72%),
+    radial-gradient(40% 46% at 90% 10%,var(--bg3),transparent 72%),
+    radial-gradient(46% 50% at 80% 90%,var(--bg2),transparent 72%),
+    radial-gradient(42% 46% at 15% 95%,var(--bg4),transparent 72%),
+    radial-gradient(30% 34% at 52% 50%,var(--bg1),transparent 75%);
+  filter:blur(30px)}
+
+/* Bề mặt kính */
+.shell{background:rgba(255,255,255,.12);border:1px solid var(--glass-edge);box-shadow:0 30px 80px -40px rgba(60,40,10,.35)}
+.card,.side,.tile,.daily,.note,.seg,.search,.sc,.btn:not(.y):not(.danger):not(.line),.filters select,.toast,.wsbtn{
+  background:var(--glass);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-edge);box-shadow:var(--shadow)}
+.sc.on,.seg button.on,.tab.on{background:var(--ink);color:var(--card);border-color:transparent}
+.sc.add{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;border:1px dashed var(--line);box-shadow:none}
+.btn.line{background:var(--glass-soft);border:1px solid var(--line);box-shadow:none}
+.btn.y{background:linear-gradient(180deg,#FFCB52,#F7B52C);border:1px solid rgba(255,255,255,.6);box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 8px 18px -8px rgba(230,150,0,.6)}
+.nv.on{background:rgba(247,181,44,.28);box-shadow:0 0 0 1px rgba(247,181,44,.45) inset}
+.nv:hover{background:var(--glass-soft)}
+.logo{box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 8px 18px -8px rgba(230,150,0,.7)}
+
+/* Thẻ việc trong bảng: kính nhẹ, không làm mờ (nhẹ máy khi nhiều thẻ) */
+.col{background:var(--glass-soft);border:1px solid var(--glass-edge);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.col.over{background:rgba(247,181,44,.18)}
+.kc{background:var(--glass-strong);border:1px solid var(--glass-edge);box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 6px 16px -10px rgba(60,40,10,.35)}
+.kc.done{background:var(--glass-soft);box-shadow:none}
+.mini{background:linear-gradient(150deg,rgba(255,226,150,.55),rgba(255,210,120,.3));border:1px solid var(--glass-edge)}
+.dt{background:var(--glass-soft);border:1px solid var(--glass-edge)}
+.dt.done{background:transparent;border-color:var(--line);box-shadow:none}
+.dt.late{background:rgba(217,68,58,.08)}
+.empty{background:var(--glass-soft)}
+
+/* Lịch vàng: kính màu */
+.cal{background:linear-gradient(160deg,rgba(255,206,92,.9),rgba(247,175,30,.82));-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:1px solid rgba(255,255,255,.55);box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 14px 34px -16px rgba(200,130,0,.6)}
+.daily{border-top:1px solid var(--glass-edge)}
+
+/* Timeline */
+.glab{background:var(--glass-strong);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur)}
+.gbg{background:var(--glass-soft);border:1px solid var(--glass-edge)}
+.gbar{box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 6px 14px -8px var(--bc)}
+.gh.today{background:var(--glass)}
+
+/* Ô nhập và hộp thoại */
+.fld input,.fld select,.fld textarea{background:var(--glass-strong);border-color:var(--line)}
+dialog{background:var(--glass-strong);-webkit-backdrop-filter:saturate(180%) blur(30px);backdrop-filter:saturate(180%) blur(30px);border:1px solid var(--glass-edge)}
+dialog::backdrop{background:rgba(31,42,68,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.gate{background:transparent}
+.gcard{background:var(--glass-strong);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-edge)}
+.toast{background:rgba(31,42,68,.82);color:#fff}
+.av{box-shadow:0 0 0 2px rgba(255,255,255,.75)}
+
+/* Trình duyệt không hỗ trợ làm mờ, hoặc người dùng bật “Giảm độ trong suốt”: dùng nền đặc để chữ luôn dễ đọc */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .card,.side,.tile,.daily,.note,.seg,.search,.sc,.filters select,.glab,dialog,.gcard{background:var(--frame)}
+}
+@media (prefers-reduced-transparency:reduce){
+  .card,.side,.tile,.daily,.note,.seg,.search,.sc,.filters select,.glab,dialog,.gcard,.kc{background:var(--frame);-webkit-backdrop-filter:none;backdrop-filter:none}
+  body::after{display:none}
+}
 </style>
 </head>
 <body>
